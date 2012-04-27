@@ -31,7 +31,14 @@ module VHDL_Parser
         port.name = n.strip
         port.direction = p[1].match(/^(in|out)/)[0]
         port.type = p[1].match(/(std_logic_vector|std_logic|unsigned|signed|integer)/)[0]
-        #port.top_size
+        sizes = p[1].match /\((\d+)\s+(downto|to)\s+(\d+)\)/
+        unless sizes.nil?
+          port.left = sizes[1]
+          port.size_dir = sizes[2]
+          port.right = sizes[3]
+        end
+        comment = p[1].match(/--.*$/)
+        port.comment = comment ? comment[0] : ""
         @entity.ports.push(port)
       end
     end
