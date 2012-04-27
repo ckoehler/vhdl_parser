@@ -8,5 +8,9 @@ module VHDL_Parser
       name + "\t" +
       type + "\n"
     end
+
+    def size
+      
+    end
   end
 end
