@@ -11,12 +11,14 @@ module VHDL_Parser
     def to_s
       name.ljust(15) + "\t" +
       direction + "\t" + 
-      type + "\t" + size + "\t" + comment + "\n"
+      type + " " + 
+      size + "\t" + 
+      comment + "\n"
     end
 
     def size
-      if type =~ /std_logic_vector|unsigned|signed/
-        "[#{@left} #{@size_dir} #{@right}]"
+      unless @left.nil?
+        "(#{@left} #{@size_dir} #{@right})"
       else
         ""
       end

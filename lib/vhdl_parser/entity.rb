@@ -11,6 +11,8 @@ module VHDL_Parser
 
     def to_s
       out = name + "\n"
+      @generics.each { |p| out += "\t" + p.to_s}
+      out += "\n\n"
       @ports.each { |p| out += "\t" + p.to_s}
       out
     end

@@ -1,5 +1,6 @@
 require 'vhdl_parser/entity'
 require 'vhdl_parser/port'
+require 'vhdl_parser/generic'
 
 module VHDL_Parser
 
@@ -30,22 +31,44 @@ module VHDL_Parser
   private
 
   def self.parse_generics(generic_array)
-    
+    generic_array.each do |g|
+      names = self.extract_name(g)
+      names.each do |n|
+        generic = Generic.new
+        generic.name = n
+        generic.type = self.extract_type(g)
+
+        if generic.type == "integer"
+          sizes = self.extract_range(g)
+        else
+          sizes = self.extract_size(g)
+        end
+
+        unless sizes.nil?
+          generic.left = sizes[1]
+          generic.size_dir = sizes[2]
+          generic.right = sizes[3]
+        end
+
+        generic.comment = self.extract_comment(g)
+
+        @entity.generics.push generic
+      end
+    end
   end
 
   def self.parse_ports(port_array)
     port_array.each do |l|
-      p = l.split(":").map! { |e| e.strip}
-      name = p[0].split(/\s*,\s*/)
-      name.each do |n|
+      names = self.extract_name(l)
+      names.each do |n|
         port = Port.new
-        port.name = n.strip
-        port.direction = p[1].match(/^(in|out)/)[0]
-        port.type = p[1].match(/(std_logic_vector|std_logic|unsigned|signed|integer)/)[0]
+        port.name = n
+        port.direction = self.extract_direction(l)
+        port.type = self.extract_type(l)
         if port.type == "integer"
-          sizes = p[1].match /range\s+(\d+)\s+(downto|to)\s+(\d+)/
+          sizes = self.extract_range(l)
         else
-          sizes = p[1].match /\((\d+)\s+(downto|to)\s+(\d+)\)/
+          sizes = self.extract_size(l)
         end
 
         unless sizes.nil?
@@ -53,11 +76,55 @@ module VHDL_Parser
           port.size_dir = sizes[2]
           port.right = sizes[3]
         end
-        comment = p[1].match(/--.*$/)
-        port.comment = comment ? comment[0] : ""
+        port.comment = self.extract_comment(l)
         @entity.ports.push(port)
       end
     end
+  end
+
+  def self.extract_name(string)
+    names = string.split(":").map! { |e| e.strip}
+    names[0].split(/\s*,\s*/)
+  end
+
+  def self.extract_direction(string)
+    res = string.match(/:\s*(in|out|inout)/)
+    if res[1]
+      return res[1]
+    end
+    ""
+  end
+
+  def self.extract_type(string)
+    res =  string.match(/:\s*(?:in|out|inout)?\s+(\w+)/i)
+    if res[1]
+      return res[1]
+    end
+    ""
+  end
+
+  def self.extract_size(string)
+    res = string.match(/\((.*?)\s+(downto|to)\s+(.+?)\)/i)
+    if res 
+      return res
+    end
+    ""
+  end
+
+  def self.extract_range(string)
+    res = string.match(/range\s+(.*?)\s+(downto|to)\s+([-a-z0-9_]*)/i)
+    if res 
+      return res
+    end
+    ""
+  end
+
+  def self.extract_comment(string)
+    res = string.match(/--(.*)$/)
+    if res && res[0]
+      return res[0]
+    end
+    ""
   end
 
 end
