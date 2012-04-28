@@ -16,7 +16,7 @@ VHDL Parser provides three different classes
 
 Examples
 ========
-     entity = VHDL\_Parser.parse(some\_vhdl\_string)
+     entity = VHDL_Parser.parse(some_vhdl_string)
      # get ports
      puts entity.ports
      # get generics
