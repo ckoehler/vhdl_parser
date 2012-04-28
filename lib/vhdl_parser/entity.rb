@@ -5,6 +5,7 @@ module VHDL_Parser
 
     def initialize
       @ports = Array.new
+      @generics = Array.new
     end
 
 
@@ -16,6 +17,10 @@ module VHDL_Parser
 
     def ports
       @ports 
+    end
+
+    def generics
+      @generics 
     end
 
   end

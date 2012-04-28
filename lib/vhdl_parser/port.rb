@@ -9,8 +9,8 @@ module VHDL_Parser
     end
 
     def to_s
-      direction + "\t" + 
       name.ljust(15) + "\t" +
+      direction + "\t" + 
       type + "\t" + size + "\t" + comment + "\n"
     end
 
