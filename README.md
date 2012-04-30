@@ -21,6 +21,6 @@ Examples
      puts entity.ports
      # get generics
      puts entity.generics
-     # print stuff
+     # print the whole entity
      puts entity
 
