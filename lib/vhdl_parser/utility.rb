@@ -23,7 +23,6 @@ module VHDL_Parser
         # Specifically, replace anything that's not a number or basic math
         # function with 'xx', since those should trigger the exception anyway.
         foreval = ret.gsub(/[^-+*\/\d\(\)\s]/,'xx')
-        p foreval
         ret = eval(foreval)
       rescue NameError => e
       end
