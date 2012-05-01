@@ -1,5 +1,16 @@
 module VHDL_Parser
+  # Utility class with helpers
   class Utility
+
+    # Substitutes a constant with an actual value, and does so smartly.
+    # This method uses the `eval` method to evaluate the final Math expression
+    # into a single value. It does some basic input checking and replaces everything
+    # that's not a number or mathematical operator with "x". That should prevent
+    # some abuse.
+    #
+    # @param [target] String The size string, e.g. "MY_VALUE-1"
+    # @param [key] String The key string, e.g. "MY_VALUE". This gets compared to the target.
+    # @param [value] String The value string, e.g. "8". That's what MY_VALUE gets replaced with.
     def self.sub_constants(target, key, value)
       # first get all the words of the size. That could be
       # a number or a constant.

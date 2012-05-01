@@ -7,16 +7,24 @@ require 'vhdl_parser/generic'
 require 'vhdl_parser/package'
 
 
+# VHDL Parser Module. It parses a given VHDL entity into Ruby objects that can 
+# then be used further in code, e.g. for visualization or automation.
 module VHDL_Parser
 
   class << self
   end
 
+  # Parses the given file and returns an Entity object.
+  # @param [filename] String the path to the file.
+  # @return [Entity] Entity object
   def self.parse_file(filename)
     string = File.read(filename)
     self.parse(string)
   end
 
+  # Parses the given string and returns an Entity object.
+  # @param [vhdl_string] String The VHDL entity as a String
+  # @return [Entity] Entity object
   def self.parse(vhdl_string)
     info = vhdl_string.match /entity\s+(.*)\s+is\s+(?:generic\s*\((.*)\);)?\s*port\s*\((.*)\);\s*end\s*\1;/im
 
@@ -28,8 +36,7 @@ module VHDL_Parser
     ports.map! { |s| s.strip!}
     ports.delete_if { |l| l.match /^--/}
     
-    @entity = Entity.new
-    @entity.name = info[1]
+    @entity = Entity.new(info[1])
 
     
     self.parse_generics(generics)
@@ -40,11 +47,17 @@ module VHDL_Parser
     return @entity
   end
 
+  # Parses the given VHDL package file and returns a Package object.
+  # @param [filename] String the path to the file.
+  # @return [Package] Package object
   def self.parse_package_file(filename)
     string = File.read(filename)
     self.parse_package(string)
   end
 
+  # Parses the given VHDL package string and returns a Package object.
+  # @param [string] String The VHDL package as a String
+  # @return [Package] Package object
   def self.parse_package(string)
     package = Package.new
 

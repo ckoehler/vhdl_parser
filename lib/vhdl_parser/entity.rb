@@ -1,10 +1,20 @@
 module VHDL_Parser
   class Entity
 
-    attr_accessor :name
-    attr_reader :ports, :generics
+    # An array of all the Ports.
+    # @return [Array<Port>] An array of all the Ports on this entity.
+    attr_reader :ports
 
-    def initialize
+    # An array of all the Generics.
+    # @return [Array<Generic>] An array of all the Generics on this entity.
+    attr_reader :generics
+
+    # The name of the Entity.
+    # @return [String] The name of the Entity
+    attr_reader :name
+
+    def initialize(name)
+      @name = name
       @ports = Array.new
       @generics = Array.new
     end
@@ -19,6 +29,13 @@ module VHDL_Parser
     end
 
 
+    # Applies constants from a package to the entity. For example, if 
+    # the Entity has an input whose size is defined with a constant, like
+    # "std_logic_vector(MY_SIZE-1 downto 0)", and "MY_SIZE" is defined in
+    # the package, this method will evaluate the size to a real number.
+    #
+    # @param [package] Package The package instance to merge.
+    # @return [nil] Nothing
     def merge_package(package)
       # TODO: do some type checking
       @generics.each do |g|
@@ -35,6 +52,7 @@ module VHDL_Parser
             g.right = Utility.sub_constants(g.right, k, v)
           end
         end
+        nil
       end
 
       @ports.each do |p|
@@ -50,6 +68,8 @@ module VHDL_Parser
       end
     end
 
+    # Re-processes Generics. May not be needed, so don't worry about it.
+    # @visibility private
     def process_generics
       @ports.each do |p|
         @generics.each do |g|

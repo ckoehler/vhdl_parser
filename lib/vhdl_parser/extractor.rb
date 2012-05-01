@@ -1,4 +1,7 @@
 module VHDL_Parser
+
+  # Helper class with methods that extract a portion of interest from
+  # a given String.
   class Extractor
 
     def self.extract_name(string)
