@@ -19,6 +19,7 @@ See http://rubydoc.info/gems/vhdl_parser/ for documentation.
 Basic Example
 =============
 Most basically,  you'll want to get an Entity from a VHDL file. Just do this:
+
     filename = "my_file.vhd"
     my_entity = VHDL_Parser.parse_file(filename)
     puts my_entity
