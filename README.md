@@ -1,3 +1,8 @@
+# Archived
+
+This repo is old and unmaintained. I added a license to the gemspec (MIT), so feel free to fork.
+
+
 VHDL Parser
 ===========
 
