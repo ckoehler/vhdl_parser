@@ -28,13 +28,15 @@ module VHDL_Parser
   def self.parse(vhdl_string)
     info = vhdl_string.match /entity\s+(.*)\s+is\s+(?:generic\s*\((.*)\);)?\s*port\s*\((.*)\);\s*end\s*\1;/im
 
-    generics =  info[2].split("\n").compact.delete_if { |s| s.strip.empty? }
-    generics.map! { |s| s.strip!}
-    generics.delete_if { |l| l.match /^--/}
+    unless info[2].nil?
+      generics =  info[2].split("\n").compact.delete_if { |s| s.strip.empty? }
+      generics.map! { |s| s.strip}
+      generics.delete_if { |l| l.match /^--/}
+    end
 
     ports =  info[3].split("\n").compact.delete_if { |s| s.strip.empty? }
-    ports.map! { |s| s.strip!}
-    ports.delete_if { |l| l.match /^--/}
+    ports.map! { |s| s.strip}
+    ports.delete_if { |l| l.match /^\s*--/}
     
     @entity = Entity.new(info[1])
 
@@ -72,6 +74,8 @@ module VHDL_Parser
   private
 
   def self.parse_generics(generic_array)
+    return if generic_array.nil?
+
     generic_array.each do |g|
       names = Extractor.extract_name(g)
       names.each do |n|
