@@ -16,6 +16,7 @@ Gem::Specification.new do |s|
   # = MANIFEST =
   s.files = Dir.glob("lib/**/*")
   
+  s.license = 'MIT'
   
   # = MANIFEST =
   s.homepage = %q{http://rubygems.org/gems/vhdl_parser}
